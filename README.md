@@ -108,7 +108,14 @@ docs/
 - [`docs/platform-architecture.md`](docs/platform-architecture.md)
 - [`docs/data-source-protocol.md`](docs/data-source-protocol.md)
 - [`docs/protocol-survey-js-ts.md`](docs/protocol-survey-js-ts.md)
+- [`docs/docker-windows.md`](docs/docker-windows.md)
 - [`docs/lens-format.md`](docs/lens-format.md)
+
+## Docker
+
+O projeto inclui um `docker-compose.yml` para rodar o ambiente Node/Expo do app mobile a partir do Windows.
+
+Veja [`docs/docker-windows.md`](docs/docker-windows.md).
 
 ## Proximos passos
 

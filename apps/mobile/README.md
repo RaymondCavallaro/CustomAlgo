@@ -45,6 +45,22 @@ npm run mobile:ios
 npm run mobile:web
 ```
 
+## Run With Docker
+
+From the repository root:
+
+```bash
+docker compose up mobile
+```
+
+For web preview:
+
+```bash
+docker compose up mobile-web
+```
+
+See `docs/docker-windows.md` for Windows/Hyper-V notes.
+
 ## Next Mobile Steps
 
 1. Add a persistent mobile data-source adapter.
