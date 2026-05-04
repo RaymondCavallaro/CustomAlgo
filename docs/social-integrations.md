@@ -18,6 +18,8 @@ Social API / RSS / share sheet / browser extension
 
 The user chooses which sources to connect.
 
+Existing interpretation systems should also be importable as optional layers. See `docs/converters-and-importers.md`.
+
 ## First Connectors
 
 ### RSS

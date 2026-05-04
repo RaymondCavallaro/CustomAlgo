@@ -47,6 +47,7 @@ docs/
   storage-strategy.md
   tag-native-semantics.md
   default-lens-packs.md
+  converters-and-importers.md
   ipad-usage.md
   social-integrations.md
   product-brief.md

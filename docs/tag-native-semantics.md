@@ -237,9 +237,13 @@ The project should move toward:
 
 - a semantic default pack
 - a minimal default tag pack for social feed algorithms
+- converters between RDF, OWL/RDFS-inspired structures, JSON/JSON-LD, graph data, and tag-native bundles
+- importers that turn existing systems into optional semantic layers
 - UI for "edit meaning" that creates a personal override
 - UI for "reset to default" that disables overrides
 - storage schema where tags and tag applications are first-class records
+
+See `docs/converters-and-importers.md`.
 
 ## Naming
 

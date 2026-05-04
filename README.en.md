@@ -110,6 +110,7 @@ docs/
 - [`docs/storage-strategy.md`](docs/storage-strategy.md)
 - [`docs/tag-native-semantics.md`](docs/tag-native-semantics.md)
 - [`docs/default-lens-packs.md`](docs/default-lens-packs.md)
+- [`docs/converters-and-importers.md`](docs/converters-and-importers.md)
 - [`docs/ipad-usage.md`](docs/ipad-usage.md)
 - [`docs/ios-ipa-altserver-plan.md`](docs/ios-ipa-altserver-plan.md)
 - [`docs/social-integrations.md`](docs/social-integrations.md)
