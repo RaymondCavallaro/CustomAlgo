@@ -1,0 +1,103 @@
+.slens-enhanced {
+  position: relative !important;
+}
+
+.slens-toolbar {
+  align-items: center;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.22);
+  color: #f9fafb;
+  display: flex;
+  flex-wrap: wrap;
+  font: 12px/1.2 Arial, sans-serif;
+  gap: 4px;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 6px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  z-index: 2147483646;
+}
+
+.slens-toolbar button,
+.slens-toolbar select {
+  border: 0;
+  border-radius: 4px;
+  font: inherit;
+  height: 26px;
+}
+
+.slens-toolbar button {
+  background: #f9fafb;
+  color: #111827;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.slens-toolbar button:hover {
+  background: #dbeafe;
+}
+
+.slens-toolbar select {
+  background: #1f2937;
+  color: #f9fafb;
+  min-width: 120px;
+  padding: 0 6px;
+}
+
+.slens-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  left: 8px;
+  max-width: calc(100% - 16px);
+  position: absolute;
+  top: 8px;
+  z-index: 2147483645;
+}
+
+.slens-badge {
+  background: #0f766e;
+  border-radius: 999px;
+  color: #f8fafc;
+  font: 11px/1 Arial, sans-serif;
+  padding: 4px 7px;
+}
+
+.slens-state-hidden {
+  display: none !important;
+}
+
+.slens-state-dimmed {
+  filter: grayscale(0.6);
+  opacity: 0.35;
+}
+
+.slens-state-boosted {
+  box-shadow: inset 4px 0 0 #14b8a6;
+}
+
+.slens-hidden-card {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #334155;
+  display: flex;
+  font: 13px/1.3 Arial, sans-serif;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 8px;
+}
+
+.slens-hidden-card button {
+  background: #111827;
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  padding: 5px 8px;
+}

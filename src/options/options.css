@@ -1,0 +1,140 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f8fafc;
+  color: #111827;
+  margin: 0;
+}
+
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #dbe3ef;
+  padding: 24px;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+p {
+  color: #64748b;
+  margin-top: 6px;
+}
+
+main {
+  display: grid;
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 24px;
+}
+
+section {
+  background: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+button,
+input,
+select,
+textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font: inherit;
+}
+
+button {
+  background: #111827;
+  color: #ffffff;
+  cursor: pointer;
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+input,
+select {
+  background: #ffffff;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+textarea {
+  min-height: 180px;
+  padding: 12px;
+  resize: vertical;
+}
+
+form,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rule-form input {
+  min-width: 140px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip,
+.row {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
+  border-radius: 6px;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+.chip {
+  border-radius: 999px;
+}
+
+.chip button,
+.row button {
+  background: #ffffff;
+  color: #111827;
+  min-height: 28px;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.row div {
+  display: grid;
+  gap: 3px;
+}
+
+.row strong {
+  font-size: 13px;
+}
+
+.row small {
+  color: #64748b;
+}

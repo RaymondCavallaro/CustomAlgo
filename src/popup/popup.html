@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SocialLens</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>SocialLens</h1>
+        <p id="summary">Loading local lens...</p>
+      </div>
+      <button id="openOptions" type="button" title="Open settings">Settings</button>
+    </header>
+
+    <main>
+      <section>
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="default">Default web</option>
+          <option value="clean">Clean</option>
+          <option value="research">Research</option>
+        </select>
+      </section>
+
+      <section>
+        <h2>Quick Tags</h2>
+        <div id="quickTags" class="tag-grid"></div>
+      </section>
+
+      <section>
+        <h2>Active Layers</h2>
+        <div id="layers" class="stack"></div>
+      </section>
+    </main>
+
+    <script src="../shared/defaults.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

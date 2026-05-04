@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SocialLens Settings</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <header>
+      <h1>SocialLens Settings</h1>
+      <p>Compose your tags, rules, visibility groups, and imported layers.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Quick Tags</h2>
+        <form id="tagForm">
+          <input id="tagInput" type="text" placeholder="new tag">
+          <button type="submit">Add Tag</button>
+        </form>
+        <div id="quickTags" class="chips"></div>
+      </section>
+
+      <section>
+        <h2>Rules</h2>
+        <form id="ruleForm" class="rule-form">
+          <input id="ruleLabel" type="text" placeholder="rule name">
+          <select id="ruleTarget">
+            <option value="content">content tag</option>
+            <option value="author">author tag</option>
+            <option value="domain">domain tag</option>
+          </select>
+          <input id="ruleTag" type="text" placeholder="tag">
+          <select id="ruleAction">
+            <option value="hide">hide</option>
+            <option value="dim">dim</option>
+            <option value="boost">boost</option>
+            <option value="badge">badge</option>
+          </select>
+          <button type="submit">Add Rule</button>
+        </form>
+        <div id="rules" class="list"></div>
+      </section>
+
+      <section>
+        <h2>Tags Database</h2>
+        <div id="tagEntries" class="list"></div>
+      </section>
+
+      <section>
+        <h2>Import / Export</h2>
+        <div class="actions">
+          <button id="exportData" type="button">Export Lens</button>
+          <button id="importData" type="button">Import Lens</button>
+          <button id="resetData" type="button">Reset Local Data</button>
+        </div>
+        <textarea id="dataBox" spellcheck="false" placeholder="Exported lens JSON appears here. Paste JSON here before importing."></textarea>
+      </section>
+    </main>
+
+    <script src="../shared/defaults.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
