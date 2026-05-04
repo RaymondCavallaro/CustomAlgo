@@ -1,6 +1,6 @@
 export function createTag(input) {
   return {
-    id: input.id || crypto.randomUUID(),
+    id: input.id || createId("tag"),
     tag: input.tag,
     targetType: input.targetType,
     targetId: input.targetId,
@@ -51,7 +51,7 @@ export function mergeLens(baseState, importedState, sourceName) {
   }));
   const importedRules = (importedState.rules || []).map((rule) => ({
     ...rule,
-    id: rule.id || crypto.randomUUID()
+    id: rule.id || createId("rule")
   }));
 
   return {
@@ -70,4 +70,12 @@ export function mergeLens(baseState, importedState, sourceName) {
       }
     ]
   };
+}
+
+export function createId(prefix = "id") {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `${prefix}:${Date.now().toString(36)}:${Math.random().toString(36).slice(2, 10)}`;
 }

@@ -7,6 +7,13 @@ export const defaultRules = [
     then: { action: "hide", weight: 1 }
   },
   {
+    id: "rule-hide-spam",
+    label: "Hide spam",
+    enabled: true,
+    when: { target: "content", tag: "spam" },
+    then: { action: "hide", weight: 1 }
+  },
+  {
     id: "rule-dim-low-quality",
     label: "Dim low-quality",
     enabled: true,
@@ -14,11 +21,32 @@ export const defaultRules = [
     then: { action: "dim", weight: 0.6 }
   },
   {
+    id: "rule-dim-clickbait",
+    label: "Dim clickbait",
+    enabled: true,
+    when: { target: "content", tag: "clickbait" },
+    then: { action: "dim", weight: 0.7 }
+  },
+  {
     id: "rule-boost-research",
     label: "Boost deep research",
     enabled: true,
     when: { target: "content", tag: "deep-research" },
     then: { action: "boost", weight: 1.7 }
+  },
+  {
+    id: "rule-boost-source-backed",
+    label: "Boost source-backed posts",
+    enabled: true,
+    when: { target: "content", tag: "source-backed" },
+    then: { action: "boost", weight: 1.2 }
+  },
+  {
+    id: "rule-badge-saved",
+    label: "Badge saved items",
+    enabled: true,
+    when: { target: "content", tag: "save-for-later" },
+    then: { action: "badge", label: "saved" }
   },
   {
     id: "rule-badge-trusted-author",
@@ -31,7 +59,11 @@ export const defaultRules = [
 
 export const defaultTags = [
   "high-signal",
+  "source-backed",
+  "save-for-later",
   "ragebait",
+  "spam",
+  "clickbait",
   "AI",
   "politics",
   "trusted",

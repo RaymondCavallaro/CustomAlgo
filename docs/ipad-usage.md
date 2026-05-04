@@ -16,6 +16,15 @@ The first usable iPad path is a development flow through Expo. The same React Na
 
 This is the easiest path for using the app on your iPad right now.
 
+Current useful loop on iPad:
+
+- open the app in Expo Go
+- paste a URL from Safari or another app into Capture
+- apply a fast decision such as spam, ragebait, clickbait, source-backed, or save-for-later
+- inspect the lens result immediately
+- keep the tags locally in SQLite
+- use Data to export, import, or reset the local lens JSON
+
 Steps:
 
 1. Install Expo Go from the iPad App Store.

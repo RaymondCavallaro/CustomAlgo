@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import * as SQLite from "expo-sqlite";
 import {
   createDefaultState,
   createTag,
@@ -18,10 +19,13 @@ import {
   toggleLayer
 } from "@customalgo/sociallens-core";
 
+const STORAGE_KEY = "customalgo.sociallens.state.v1";
+
 const tabs = [
   { id: "capture", label: "Capture" },
   { id: "lens", label: "Lens" },
-  { id: "tags", label: "Tags" }
+  { id: "tags", label: "Tags" },
+  { id: "data", label: "Data" }
 ];
 
 const starterContent = {
@@ -34,12 +38,121 @@ const starterContent = {
   authorId: "mobile-share:author:shared-from-mobile"
 };
 
+const fastTags = [
+  { tag: "spam", label: "Spam" },
+  { tag: "ragebait", label: "Ragebait" },
+  { tag: "clickbait", label: "Clickbait" },
+  { tag: "low-quality", label: "Low quality" },
+  { tag: "source-backed", label: "Source backed" },
+  { tag: "deep-research", label: "Deep research" },
+  { tag: "save-for-later", label: "Save" }
+];
+
+let db;
+
+function getDb() {
+  if (!db) {
+    db = SQLite.openDatabaseSync("sociallens.db");
+    db.execSync("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL)");
+  }
+
+  return db;
+}
+
+function loadStoredState() {
+  const row = getDb().getFirstSync("SELECT value FROM kv WHERE key = ?", STORAGE_KEY);
+
+  if (!row?.value) {
+    return null;
+  }
+
+  return JSON.parse(row.value);
+}
+
+function saveStoredState(state) {
+  getDb().runSync(
+    "INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)",
+    STORAGE_KEY,
+    JSON.stringify(state)
+  );
+}
+
+function ensureStateShape(value) {
+  const defaults = createDefaultState();
+
+  if (!value || typeof value !== "object") {
+    return defaults;
+  }
+
+  return {
+    ...defaults,
+    ...value,
+    circles: Array.isArray(value.circles) ? value.circles : defaults.circles,
+    contacts: Array.isArray(value.contacts) ? value.contacts : defaults.contacts,
+    layers: Array.isArray(value.layers) ? value.layers : defaults.layers,
+    quickTags: mergeUnique(defaults.quickTags, value.quickTags),
+    rules: mergeById(defaults.rules, value.rules),
+    tags: Array.isArray(value.tags) ? value.tags : defaults.tags
+  };
+}
+
+function mergeById(defaultItems, userItems) {
+  if (!Array.isArray(userItems)) {
+    return defaultItems;
+  }
+
+  const seen = new Set(userItems.map((item) => item.id));
+  const missingDefaults = defaultItems.filter((item) => !seen.has(item.id));
+
+  return [...userItems, ...missingDefaults];
+}
+
+function mergeUnique(defaultItems, userItems) {
+  if (!Array.isArray(userItems)) {
+    return defaultItems;
+  }
+
+  return [...userItems, ...defaultItems.filter((item) => !userItems.includes(item))];
+}
+
 export default function App() {
   const [state, setState] = useState(() => createDefaultState());
   const [activeTab, setActiveTab] = useState("capture");
   const [draftUrl, setDraftUrl] = useState(starterContent.url);
   const [draftTitle, setDraftTitle] = useState(starterContent.title);
+  const [draftNote, setDraftNote] = useState("");
   const [selectedTag, setSelectedTag] = useState("deep-research");
+  const [tagFilter, setTagFilter] = useState("");
+  const [dataText, setDataText] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [status, setStatus] = useState("Loading local lens...");
+
+  useEffect(() => {
+    try {
+      const stored = loadStoredState();
+      const nextState = ensureStateShape(stored);
+      setState(nextState);
+      setDataText(JSON.stringify(nextState, null, 2));
+      setStatus(stored ? "Loaded saved iPad/local lens." : "Started a fresh local lens.");
+    } catch (error) {
+      setStatus(`Local storage error: ${error.message}`);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      saveStoredState(state);
+      setStatus("Saved locally on this device.");
+    } catch (error) {
+      setStatus(`Save failed: ${error.message}`);
+    }
+  }, [isLoaded, state]);
 
   const capturedContent = useMemo(() => {
     const url = draftUrl.trim() || starterContent.url;
@@ -51,7 +164,8 @@ export default function App() {
       url,
       title,
       domain,
-      contentId: `mobile-share:${stableId(url)}`
+      contentId: `mobile-share:${stableId(url)}`,
+      authorId: `mobile-share:domain:${domain}`
     };
   }, [draftTitle, draftUrl]);
 
@@ -59,18 +173,20 @@ export default function App() {
   const summary = summarizeActions(actions);
   const capturedTags = tagsForTarget(state, "content", capturedContent.contentId);
 
-  function addContentTag() {
+  function addContentTag(tagName = selectedTag) {
     const tag = createTag({
-      tag: selectedTag,
+      tag: tagName,
       targetType: "content",
       targetId: capturedContent.contentId,
       platform: capturedContent.platform,
       url: capturedContent.url,
       title: capturedContent.title,
       author: capturedContent.author,
-      visibility: "private"
+      visibility: "private",
+      note: draftNote
     });
 
+    setSelectedTag(tagName);
     setState((current) => {
       const exists = current.tags.some((item) => {
         return item.targetId === tag.targetId && item.targetType === tag.targetType && item.tag === tag.tag;
@@ -95,13 +211,37 @@ export default function App() {
     setState((current) => toggleLayer(current, layerId, enabled));
   }
 
+  function exportLens() {
+    setDataText(JSON.stringify(state, null, 2));
+    setStatus("Export prepared from current local lens.");
+  }
+
+  function importLens() {
+    try {
+      const parsed = JSON.parse(dataText);
+      const nextState = ensureStateShape(parsed);
+      setState(nextState);
+      setStatus("Imported lens JSON into local storage.");
+    } catch (error) {
+      setStatus(`Import failed: ${error.message}`);
+    }
+  }
+
+  function resetLens() {
+    const nextState = createDefaultState();
+    setState(nextState);
+    setDataText(JSON.stringify(nextState, null, 2));
+    setStatus("Reset to the default clean-feed lens.");
+  }
+
   return (
     <SafeAreaView style={styles.shell}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerText}>
           <Text style={styles.kicker}>CustomAlgo</Text>
           <Text style={styles.title}>SocialLens Mobile</Text>
+          <Text style={styles.status}>{status}</Text>
         </View>
         <View style={styles.counter}>
           <Text style={styles.counterNumber}>{state.tags.length}</Text>
@@ -128,9 +268,12 @@ export default function App() {
             actions={actions}
             capturedContent={capturedContent}
             capturedTags={capturedTags}
+            draftNote={draftNote}
             draftTitle={draftTitle}
             draftUrl={draftUrl}
-            onAddTag={addContentTag}
+            onAddFastTag={addContentTag}
+            onAddTag={() => addContentTag()}
+            onDraftNoteChange={setDraftNote}
             onDraftTitleChange={setDraftTitle}
             onDraftUrlChange={setDraftUrl}
             onRemoveTag={removeTag}
@@ -151,7 +294,22 @@ export default function App() {
         )}
 
         {activeTab === "tags" && (
-          <TagsView tags={state.tags} onRemoveTag={removeTag} />
+          <TagsView
+            filter={tagFilter}
+            onFilterChange={setTagFilter}
+            onRemoveTag={removeTag}
+            tags={state.tags}
+          />
+        )}
+
+        {activeTab === "data" && (
+          <DataView
+            dataText={dataText}
+            onDataTextChange={setDataText}
+            onExport={exportLens}
+            onImport={importLens}
+            onReset={resetLens}
+          />
         )}
       </ScrollView>
     </SafeAreaView>
@@ -176,7 +334,28 @@ function CaptureView(props) {
           style={styles.input}
           value={props.draftTitle}
         />
+        <TextInput
+          multiline
+          onChangeText={props.onDraftNoteChange}
+          placeholder="Why this tag matters"
+          style={[styles.input, styles.noteInput]}
+          value={props.draftNote}
+        />
         <Text style={styles.meta}>{props.capturedContent.domain}</Text>
+      </Section>
+
+      <Section title="Fast Decisions">
+        <View style={styles.chips}>
+          {fastTags.map((item) => (
+            <TouchableOpacity
+              key={item.tag}
+              onPress={() => props.onAddFastTag(item.tag)}
+              style={styles.chip}
+            >
+              <Text style={styles.chipText}>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </Section>
 
       <Section title="Quick Tag">
@@ -199,8 +378,18 @@ function CaptureView(props) {
           <ResultBadge active={props.summary.hidden} label="Hidden" />
           <ResultBadge active={props.summary.dimmed} label="Dimmed" />
           <ResultBadge active={props.summary.boosted} label="Boosted" />
+          {props.summary.badges.map((badge) => (
+            <ResultBadge key={badge} active label={badge} />
+          ))}
         </View>
         <Text style={styles.meta}>Score {props.summary.score.toFixed(1)}</Text>
+        {props.actions.length > 0 && (
+          <View style={styles.stackCompact}>
+            {props.actions.map((action) => (
+              <Text key={action.ruleId} style={styles.meta}>{action.label}</Text>
+            ))}
+          </View>
+        )}
       </Section>
 
       <Section title="Current Item Tags">
@@ -254,17 +443,54 @@ function LensView({ layers, mode, onLayerToggle, rules }) {
   );
 }
 
-function TagsView({ onRemoveTag, tags }) {
+function TagsView({ filter, onFilterChange, onRemoveTag, tags }) {
+  const normalizedFilter = filter.trim().toLowerCase();
+  const visibleTags = normalizedFilter
+    ? tags.filter((tag) => {
+        const haystack = `${tag.tag} ${tag.title} ${tag.url} ${tag.note}`.toLowerCase();
+        return haystack.includes(normalizedFilter);
+      })
+    : tags;
+
   return (
     <View style={styles.stack}>
       <Section title="Local Mobile Tags">
-        {tags.length === 0 ? (
+        <TextInput
+          autoCapitalize="none"
+          onChangeText={onFilterChange}
+          placeholder="Filter local tags"
+          style={styles.input}
+          value={filter}
+        />
+        {visibleTags.length === 0 ? (
           <Text style={styles.empty}>Captured mobile tags will appear here.</Text>
         ) : (
-          tags.map((tag) => (
+          visibleTags.map((tag) => (
             <TagRow key={tag.id} tag={tag} onRemove={() => onRemoveTag(tag.id)} />
           ))
         )}
+      </Section>
+    </View>
+  );
+}
+
+function DataView({ dataText, onDataTextChange, onExport, onImport, onReset }) {
+  return (
+    <View style={styles.stack}>
+      <Section title="Portable Lens Data">
+        <TextInput
+          autoCapitalize="none"
+          multiline
+          onChangeText={onDataTextChange}
+          placeholder="Exported lens JSON"
+          style={[styles.input, styles.dataInput]}
+          value={dataText}
+        />
+        <View style={styles.buttonRow}>
+          <PrimaryButton label="Export" onPress={onExport} />
+          <PrimaryButton label="Import" onPress={onImport} />
+        </View>
+        <DangerButton label="Reset defaults" onPress={onReset} />
       </Section>
     </View>
   );
@@ -287,6 +513,14 @@ function PrimaryButton({ label, onPress }) {
   );
 }
 
+function DangerButton({ label, onPress }) {
+  return (
+    <TouchableOpacity accessibilityRole="button" onPress={onPress} style={styles.dangerButton}>
+      <Text style={styles.dangerButtonText}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
+
 function ResultBadge({ active, label }) {
   return (
     <View style={[styles.resultBadge, active && styles.resultBadgeActive]}>
@@ -301,6 +535,8 @@ function TagRow({ onRemove, tag }) {
       <View style={styles.rowText}>
         <Text style={styles.rowTitle}>{tag.tag}</Text>
         <Text style={styles.meta}>{tag.targetType} | {tag.platform} | {tag.visibility}</Text>
+        {!!tag.title && <Text style={styles.bodyText}>{tag.title}</Text>}
+        {!!tag.note && <Text style={styles.meta}>{tag.note}</Text>}
       </View>
       <TouchableOpacity accessibilityRole="button" onPress={onRemove} style={styles.removeButton}>
         <Text style={styles.removeButtonText}>Remove</Text>
@@ -336,7 +572,8 @@ const palette = {
   canvas: "#f6f7f9",
   accent: "#0f766e",
   accentSoft: "#d9f3ee",
-  warning: "#7c2d12"
+  warning: "#7c2d12",
+  warningSoft: "#fff1eb"
 };
 
 const styles = StyleSheet.create({
@@ -354,6 +591,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 14
   },
+  headerText: {
+    flex: 1,
+    paddingRight: 10
+  },
   kicker: {
     color: palette.accent,
     fontSize: 12,
@@ -364,6 +605,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "800",
     marginTop: 2
+  },
+  status: {
+    color: palette.muted,
+    fontSize: 12,
+    marginTop: 4
   },
   counter: {
     alignItems: "center",
@@ -419,6 +665,9 @@ const styles = StyleSheet.create({
   stack: {
     gap: 12
   },
+  stackCompact: {
+    gap: 4
+  },
   section: {
     backgroundColor: palette.panel,
     borderColor: palette.line,
@@ -439,7 +688,17 @@ const styles = StyleSheet.create({
     color: palette.ink,
     fontSize: 15,
     minHeight: 42,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    paddingVertical: 8
+  },
+  noteInput: {
+    minHeight: 72,
+    textAlignVertical: "top"
+  },
+  dataInput: {
+    fontFamily: "monospace",
+    minHeight: 260,
+    textAlignVertical: "top"
   },
   chips: {
     flexDirection: "row",
@@ -465,15 +724,36 @@ const styles = StyleSheet.create({
   chipTextActive: {
     color: "#ffffff"
   },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 8
+  },
   primaryButton: {
     alignItems: "center",
     backgroundColor: palette.ink,
     borderRadius: 7,
+    flex: 1,
     minHeight: 44,
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingHorizontal: 10
   },
   primaryButtonText: {
     color: "#ffffff",
+    fontSize: 15,
+    fontWeight: "800"
+  },
+  dangerButton: {
+    alignItems: "center",
+    backgroundColor: palette.warningSoft,
+    borderColor: "#f1c6b5",
+    borderRadius: 7,
+    borderWidth: 1,
+    minHeight: 44,
+    justifyContent: "center",
+    paddingHorizontal: 10
+  },
+  dangerButtonText: {
+    color: palette.warning,
     fontSize: 15,
     fontWeight: "800"
   },
