@@ -6,6 +6,6 @@ The first implementation in this repo is still the desktop browser extension at 
 
 - `browser-extension`: desktop browser overlay
 - `web`: responsive PWA for dashboard, search, imports, trust, and circles
-- `mobile`: iOS, iPadOS, and Android app
+- `mobile`: iOS, iPadOS, Android, and Expo web-preview app
 
 All apps should use `packages/sociallens-core` for the lens state and algorithm behavior.

@@ -76,6 +76,10 @@ Data source = onde os dados do usuario vivem
 ```txt
 apps/
   README.md
+  mobile/
+    App.js
+    app.json
+    package.json
 packages/
   sociallens-core/
     data-source.js
@@ -111,8 +115,8 @@ docs/
 1. Mover a extensao para `apps/browser-extension` quando o core compartilhado estiver mais conectado.
 2. Migrar o core para TypeScript.
 3. Criar um adapter real de storage antes de adicionar web/mobile/sync.
-4. Comecar `apps/web` como PWA responsivo para tags, regras, camadas, circulos e busca.
-5. Comecar `apps/mobile` para Android, iOS e iPadOS usando o mesmo core.
+4. Trocar o estado em memoria do app mobile por um adapter persistente.
+5. Comecar `apps/web` como PWA responsivo para tags, regras, camadas, circulos e busca.
 6. Adicionar captura por share sheet no mobile.
 7. Melhorar extractors de plataforma para IDs estaveis de posts e contas.
 

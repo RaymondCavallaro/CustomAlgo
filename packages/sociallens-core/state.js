@@ -42,6 +42,10 @@ export const defaultTags = [
   "misleading"
 ];
 
+function cloneJson(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 export function createDefaultState() {
   return {
     version: 1,
@@ -78,7 +82,7 @@ export function createDefaultState() {
         sourceUser: "me"
       }
     ],
-    rules: structuredClone(defaultRules),
+    rules: cloneJson(defaultRules),
     quickTags: [...defaultTags]
   };
 }

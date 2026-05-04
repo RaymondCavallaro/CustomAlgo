@@ -1,0 +1,16 @@
+{
+  "name": "customalgo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm --workspace @customalgo/mobile run start",
+    "mobile:android": "npm --workspace @customalgo/mobile run android",
+    "mobile:ios": "npm --workspace @customalgo/mobile run ios",
+    "mobile:web": "npm --workspace @customalgo/mobile run web"
+  },
+  "license": "MIT"
+}

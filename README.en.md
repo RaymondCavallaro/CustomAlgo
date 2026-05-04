@@ -76,6 +76,10 @@ Data source = where the user's data lives
 ```txt
 apps/
   README.md
+  mobile/
+    App.js
+    app.json
+    package.json
 packages/
   sociallens-core/
     data-source.js
@@ -111,8 +115,8 @@ docs/
 1. Move the extension into `apps/browser-extension` once the shared core is more fully wired.
 2. Migrate the core to TypeScript.
 3. Create a real storage adapter before adding web/mobile/sync.
-4. Start `apps/web` as a responsive PWA for tags, rules, layers, circles, and search.
-5. Start `apps/mobile` for Android, iOS, and iPadOS using the same core.
+4. Replace the mobile app's in-memory state with a persistent adapter.
+5. Start `apps/web` as a responsive PWA for tags, rules, layers, circles, and search.
 6. Add mobile share-sheet capture.
 7. Improve platform extractors for stable post and account IDs.
 

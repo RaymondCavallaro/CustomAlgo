@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "SocialLens",
+    "slug": "sociallens-mobile",
+    "version": "0.1.0",
+    "orientation": "default",
+    "scheme": "sociallens",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.customalgo.sociallens"
+    },
+    "android": {
+      "package": "app.customalgo.sociallens"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
