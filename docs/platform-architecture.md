@@ -44,6 +44,9 @@ services/
 docs/
   platform-architecture.md
   data-source-protocol.md
+  storage-strategy.md
+  ipad-usage.md
+  social-integrations.md
   product-brief.md
   lens-format.md
 ```
@@ -73,6 +76,7 @@ The current repository has the extension at the root for speed, but the new `pac
 - manage circles and visibility before sharing tags
 - provide a SocialLens in-app browser for pages where overlay behavior is needed
 - sync local encrypted lens data when the user opts in
+- use SQLite as the default local database
 
 ### Sync/Sharing Service
 
@@ -105,3 +109,5 @@ Content references
 That is what makes Android, iOS, iPadOS, web, and desktop browser behavior feel like one product.
 
 The same principle applies to storage. SocialLens should depend on a common data source contract, not a single hard-coded backend.
+
+See `docs/ipad-usage.md` for the concrete iPad development and usage path.

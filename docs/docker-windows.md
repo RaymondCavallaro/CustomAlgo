@@ -44,12 +44,12 @@ docker compose up mobile-web
 
 When running Compose from Windows PowerShell, the default workspace mount is the current repository folder.
 
-When driving Docker from WSL/Codex through a named-pipe relay, set `CUSTOMALGO_WORKSPACE` to a Windows-style path for the repository. Docker Desktop Hyper-V can see Windows paths, but it may not see WSL paths such as `/home/...` or `/mnt/c/...` correctly.
+When driving Docker from WSL/Codex through a named-pipe relay, set `CUSTOMALGO_WORKSPACE` to a Windows-style path for the repository. Docker Desktop Hyper-V can see Windows paths, but it may not see Linux-style WSL paths correctly.
 
 Example shape:
 
 ```bash
-CUSTOMALGO_WORKSPACE='X:\path\to\CustomAlgo' docker compose config
+CUSTOMALGO_WORKSPACE='<windows repository path>' docker compose config
 ```
 
 Stop services:

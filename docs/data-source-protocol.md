@@ -89,3 +89,7 @@ Your data source.
 ## Related Survey
 
 See `docs/protocol-survey-js-ts.md` for a survey of protocols and JS/TS ecosystem options that could support this adapter direction.
+
+## Current Storage Direction
+
+See `docs/storage-strategy.md` for the current decision: SQLite as the default local database and PostgreSQL as an optional user-controlled remote data source through a sync/service adapter.

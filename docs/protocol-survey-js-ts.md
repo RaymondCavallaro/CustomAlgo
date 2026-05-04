@@ -24,16 +24,19 @@ SocialLens is currently written in JavaScript and should probably move toward Ty
 
 ## Initial Recommendation
 
-Do not pick one universal backend yet.
+Do not pick one universal backend yet. Use SQLite as the default local data source and make PostgreSQL an optional remote/self-hosted data source through a sync/service adapter.
 
 Use this staged approach:
 
 1. Define SocialLens entities and the `LensDataSource` adapter in TypeScript.
-2. Use Dexie/IndexedDB for browser/PWA local storage.
-3. Use SQLite for mobile local storage.
-4. Keep the sync contract backend-neutral with pull/push/checkpoint semantics.
-5. Consider RxDB or PowerSync if we want an existing sync engine instead of writing one.
-6. Keep AT Protocol and Solid as future interoperability adapters, not MVP dependencies.
+2. Use SQLite for mobile and tablet local storage.
+3. Use Dexie/IndexedDB for browser/PWA local storage when a browser SQL option is not appropriate.
+4. Use PostgreSQL behind a user-configurable sync service, not directly from mobile clients.
+5. Keep the sync contract backend-neutral with pull/push/checkpoint semantics.
+6. Consider RxDB or PowerSync if we want an existing sync engine instead of writing one.
+7. Keep AT Protocol and Solid as future interoperability adapters, not MVP dependencies.
+
+For a SQL intermediary, prefer Drizzle below the SocialLens data-source contract. Drizzle has a documented Expo SQLite driver and PostgreSQL support, which fits the SQLite-default/Postgres-optional direction. Kysely remains attractive for server-side query building, but it is less directly aligned with Expo mobile. Prisma is strong for server apps but is heavier and less suitable as the mobile-local layer.
 
 ## Why This Direction
 
