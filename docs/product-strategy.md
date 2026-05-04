@@ -2,10 +2,10 @@
 
 SocialLens is structurally novel, but the first product experience must be brutally simple.
 
-The long-term vision is a user-controlled epistemic layer for the web. The first win is much narrower:
+The long-term vision is a user-controlled epistemic layer for the web. The first win is much narrower and should start where people already feel the pain: social feeds.
 
 ```txt
-I can clean my feed better than the platform can.
+I can clean my social feed better than the platform can.
 ```
 
 If the product does not deliver visible feed improvement in one session, the deeper graph model will not matter to most users.
@@ -160,35 +160,44 @@ Minimum useful flow:
 
 ## Product Phases
 
-### Phase 1: Personal Clean Feed
+### Phase 1: Personal Social Clean Feed
 
 - local tags
+- social post capture
+- social source metadata such as platform, author, URL, quoted claim, and annotation
 - default lens packs
 - hide/dim/boost/badge rules
 - no account required
 - no trust network required
 
-### Phase 2: Portable Semantics
+### Phase 2: Web Annotation Layer
+
+- Hypothesis-like annotations for normal web pages
+- quote/selector anchoring
+- page-level, passage-level, author-level, and domain-level tags
+- import/export compatibility with annotation-shaped data
+
+### Phase 3: Portable Semantics
 
 - export/import tag-native bundles
 - default semantics layer
 - personal override layer
 - reset to default
 
-### Phase 3: Optional Social Imports
+### Phase 4: Optional Social Imports
 
 - RSS first
 - URL/share capture
 - optional X/Facebook enrichment
 - imported layers with provenance
 
-### Phase 4: Trust Network
+### Phase 5: Trust Network
 
 - trust people by context
 - subscribe to tag layers
 - conflict/disagreement views
 
-### Phase 5: Networked Search
+### Phase 6: Networked Search
 
 - search saved/tagged/imported content
 - expand through trusted users and layers

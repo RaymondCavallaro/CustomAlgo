@@ -29,14 +29,49 @@ const tabs = [
 ];
 
 const starterContent = {
-  platform: "mobile-share",
-  url: "https://example.org/research-note",
-  title: "Example shared page",
-  author: "Shared from mobile",
+  platform: "x",
+  url: "https://x.com/example/status/123456789",
+  title: "Example social post about a breaking story",
+  author: "@example",
   domain: "example.org",
-  contentId: "mobile-share:example-research-note",
-  authorId: "mobile-share:author:shared-from-mobile"
+  contentId: "x:post:123456789",
+  authorId: "x:author:example"
 };
+
+const socialPresets = [
+  {
+    id: "x",
+    label: "X post",
+    platform: "x",
+    url: "https://x.com/example/status/123456789",
+    title: "Example social post about a breaking story",
+    author: "@example"
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    platform: "facebook",
+    url: "https://www.facebook.com/example/posts/123456789",
+    title: "Example Facebook post shared by a page",
+    author: "Example Page"
+  },
+  {
+    id: "reddit",
+    label: "Reddit",
+    platform: "reddit",
+    url: "https://www.reddit.com/r/example/comments/abc123/example_discussion/",
+    title: "Example Reddit discussion",
+    author: "u/example"
+  },
+  {
+    id: "rss",
+    label: "RSS item",
+    platform: "rss",
+    url: "https://example.org/feed/story",
+    title: "Example RSS story",
+    author: "Example Feed"
+  }
+];
 
 const fastTags = [
   { tag: "spam", label: "Spam" },
@@ -99,6 +134,9 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("capture");
   const [draftUrl, setDraftUrl] = useState(starterContent.url);
   const [draftTitle, setDraftTitle] = useState(starterContent.title);
+  const [draftAuthor, setDraftAuthor] = useState(starterContent.author);
+  const [draftPlatform, setDraftPlatform] = useState(starterContent.platform);
+  const [draftQuote, setDraftQuote] = useState("");
   const [draftNote, setDraftNote] = useState("");
   const [selectedTag, setSelectedTag] = useState("deep-research");
   const [tagFilter, setTagFilter] = useState("");
@@ -137,16 +175,19 @@ export default function App() {
     const url = draftUrl.trim() || starterContent.url;
     const title = draftTitle.trim() || url;
     const domain = domainFromUrl(url);
+    const platform = draftPlatform.trim() || platformFromUrl(url);
 
     return {
       ...starterContent,
+      platform,
       url,
       title,
+      author: draftAuthor.trim() || "unknown",
       domain,
-      contentId: `mobile-share:${stableId(url)}`,
-      authorId: `mobile-share:domain:${domain}`
+      contentId: `${platform}:${stableId(url)}`,
+      authorId: `${platform}:author:${stableId(draftAuthor || domain)}`
     };
-  }, [draftTitle, draftUrl]);
+  }, [draftAuthor, draftPlatform, draftTitle, draftUrl]);
 
   const actions = evaluateRules(state, capturedContent);
   const summary = summarizeActions(actions);
@@ -162,6 +203,7 @@ export default function App() {
       title: capturedContent.title,
       author: capturedContent.author,
       visibility: "private",
+      quote: draftQuote,
       note: draftNote
     });
 
@@ -188,6 +230,16 @@ export default function App() {
 
   function setLayerEnabled(layerId, enabled) {
     setState((current) => toggleLayer(current, layerId, enabled));
+  }
+
+  function applyPreset(preset) {
+    setDraftPlatform(preset.platform);
+    setDraftUrl(preset.url);
+    setDraftTitle(preset.title);
+    setDraftAuthor(preset.author);
+    setDraftQuote("");
+    setDraftNote("");
+    setStatus(`Loaded ${preset.label} capture preset.`);
   }
 
   function exportLens() {
@@ -248,13 +300,20 @@ export default function App() {
             capturedContent={capturedContent}
             capturedTags={capturedTags}
             draftNote={draftNote}
+            draftQuote={draftQuote}
+            draftAuthor={draftAuthor}
+            draftPlatform={draftPlatform}
             draftTitle={draftTitle}
             draftUrl={draftUrl}
             onAddFastTag={addContentTag}
             onAddTag={() => addContentTag()}
+            onDraftAuthorChange={setDraftAuthor}
             onDraftNoteChange={setDraftNote}
+            onDraftPlatformChange={setDraftPlatform}
+            onDraftQuoteChange={setDraftQuote}
             onDraftTitleChange={setDraftTitle}
             onDraftUrlChange={setDraftUrl}
+            onPresetSelect={applyPreset}
             onRemoveTag={removeTag}
             onSelectedTagChange={setSelectedTag}
             quickTags={state.quickTags}
@@ -298,7 +357,30 @@ export default function App() {
 function CaptureView(props) {
   return (
     <View style={styles.stack}>
-      <Section title="Shared Item">
+      <Section title="Social Source">
+        <View style={styles.chips}>
+          {socialPresets.map((preset) => (
+            <TouchableOpacity
+              key={preset.id}
+              onPress={() => props.onPresetSelect(preset)}
+              style={[styles.chip, props.draftPlatform === preset.platform && styles.chipActive]}
+            >
+              <Text style={[styles.chipText, props.draftPlatform === preset.platform && styles.chipTextActive]}>
+                {preset.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TextInput
+          autoCapitalize="none"
+          onChangeText={props.onDraftPlatformChange}
+          placeholder="Platform"
+          style={styles.input}
+          value={props.draftPlatform}
+        />
+      </Section>
+
+      <Section title="Post Or Page">
         <TextInput
           autoCapitalize="none"
           keyboardType="url"
@@ -314,13 +396,30 @@ function CaptureView(props) {
           value={props.draftTitle}
         />
         <TextInput
+          autoCapitalize="none"
+          onChangeText={props.onDraftAuthorChange}
+          placeholder="Author, page, handle, or feed"
+          style={styles.input}
+          value={props.draftAuthor}
+        />
+        <Text style={styles.meta}>{props.capturedContent.platform} | {props.capturedContent.domain}</Text>
+      </Section>
+
+      <Section title="Annotation">
+        <TextInput
+          multiline
+          onChangeText={props.onDraftQuoteChange}
+          placeholder="Quoted text or claim being annotated"
+          style={[styles.input, styles.noteInput]}
+          value={props.draftQuote}
+        />
+        <TextInput
           multiline
           onChangeText={props.onDraftNoteChange}
-          placeholder="Why this tag matters"
+          placeholder="Your annotation or context"
           style={[styles.input, styles.noteInput]}
           value={props.draftNote}
         />
-        <Text style={styles.meta}>{props.capturedContent.domain}</Text>
       </Section>
 
       <Section title="Fast Decisions">
@@ -515,6 +614,7 @@ function TagRow({ onRemove, tag }) {
         <Text style={styles.rowTitle}>{tag.tag}</Text>
         <Text style={styles.meta}>{tag.targetType} | {tag.platform} | {tag.visibility}</Text>
         {!!tag.title && <Text style={styles.bodyText}>{tag.title}</Text>}
+        {!!tag.quote && <Text style={styles.quoteText}>{tag.quote}</Text>}
         {!!tag.note && <Text style={styles.meta}>{tag.note}</Text>}
       </View>
       <TouchableOpacity accessibilityRole="button" onPress={onRemove} style={styles.removeButton}>
@@ -530,6 +630,24 @@ function domainFromUrl(value) {
   } catch (_error) {
     return "unknown";
   }
+}
+
+function platformFromUrl(value) {
+  const domain = domainFromUrl(value);
+
+  if (domain.includes("x.com") || domain.includes("twitter.com")) {
+    return "x";
+  }
+
+  if (domain.includes("facebook.com")) {
+    return "facebook";
+  }
+
+  if (domain.includes("reddit.com")) {
+    return "reddit";
+  }
+
+  return "web";
 }
 
 function stableId(value) {
@@ -786,6 +904,13 @@ const styles = StyleSheet.create({
   bodyText: {
     color: palette.ink,
     fontSize: 14
+  },
+  quoteText: {
+    borderLeftColor: palette.accent,
+    borderLeftWidth: 3,
+    color: palette.ink,
+    fontSize: 13,
+    paddingLeft: 8
   },
   empty: {
     color: palette.muted,

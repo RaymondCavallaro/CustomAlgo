@@ -8,6 +8,7 @@ export function createTag(input) {
     url: input.url || "",
     title: input.title || "",
     author: input.author || "",
+    quote: input.quote || "",
     sourceUser: input.sourceUser || "me",
     visibility: input.visibility || "private",
     confidence: input.confidence ?? 1,

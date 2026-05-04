@@ -121,6 +121,32 @@ interface LayerImporter {
 
 Importers should not directly decide ranking. They produce normalized tags, tag applications, relation applications, and provenance records.
 
+## Social-First Import Order
+
+The MVP should prioritize social feeds before broad web annotation because social networks are where the first useful clean-feed behavior will be most visible.
+
+Initial order:
+
+1. Manual social URL capture in the app.
+2. RSS importer for feeds and public social-like streams.
+3. Optional X importer where API access and terms allow it.
+4. Optional Facebook importer where API access and terms allow it.
+5. Generic web page annotation import/export.
+
+Social importers should normalize:
+
+```txt
+platform
+post URL
+post id
+author/page/handle
+author id
+quoted text or claim
+annotation/comment
+tags
+provenance
+```
+
 ## Existing Systems As Layers
 
 ### Bias And Media Perspective
@@ -217,6 +243,20 @@ importantPassage
 researchNote
 userComment
 ```
+
+Use Hypothesis-like concepts as the annotation shape:
+
+```txt
+target URL
+selector or quoted passage
+annotation body
+tags
+creator
+created/updated timestamps
+visibility
+```
+
+For the MVP, social post annotations can use the same shape with the post URL as the target and the quoted claim as the selector-like anchor.
 
 Use as:
 
