@@ -1,13 +1,13 @@
 # SocialLens Mobile
 
-Initial mobile client for CustomAlgo/SocialLens.
+Expo client for CustomAlgo/SocialLens. The main try-it-now path is web, with the same app still targeting mobile and tablet.
 
 This app is planned to cover:
 
+- web through Expo
+- iPadOS through Safari or Expo Go
 - Android
 - iOS
-- iPadOS
-- web preview through Expo
 
 The first app uses Expo/React Native and imports the shared lens logic from `@customalgo/sociallens-core`.
 
@@ -20,10 +20,10 @@ The current app is a usable local clean-feed prototype:
 - evaluate the shared SocialLens rule engine
 - toggle lens layers
 - inspect and remove local tags
-- persist the local lens with SQLite on the device
+- persist the local lens with browser storage on web and SQLite on native devices
 - export, import, and reset the local lens JSON
 
-This is not wired to native share sheets yet. Manual URL capture is the first iPad-friendly path while the data model and routing remain flexible.
+This is not wired to native share sheets yet. Manual URL capture in the web app is the main path while the data model and routing remain flexible.
 
 ## Run
 
@@ -33,10 +33,10 @@ Install dependencies from the repository root:
 npm install
 ```
 
-Start the mobile app:
+Start the web app:
 
 ```bash
-npm run mobile
+npm run mobile:web
 ```
 
 Platform shortcuts:
@@ -52,14 +52,12 @@ npm run mobile:web
 From the repository root:
 
 ```bash
-docker compose up mobile
-```
-
-For web preview:
-
-```bash
 docker compose up mobile-web
 ```
+
+The app should be available from the host browser at:
+
+http://localhost:8081
 
 See `docs/docker-windows.md` for Windows/Hyper-V notes.
 

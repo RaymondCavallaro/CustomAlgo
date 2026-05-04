@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import * as SQLite from "expo-sqlite";
 import {
   createDefaultState,
   createTag,
@@ -18,6 +17,7 @@ import {
   tagsForTarget,
   toggleLayer
 } from "@customalgo/sociallens-core";
+import { loadState, saveState, storageLabel } from "./storage";
 
 const STORAGE_KEY = "customalgo.sociallens.state.v1";
 
@@ -48,33 +48,12 @@ const fastTags = [
   { tag: "save-for-later", label: "Save" }
 ];
 
-let db;
-
-function getDb() {
-  if (!db) {
-    db = SQLite.openDatabaseSync("sociallens.db");
-    db.execSync("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL)");
-  }
-
-  return db;
-}
-
 function loadStoredState() {
-  const row = getDb().getFirstSync("SELECT value FROM kv WHERE key = ?", STORAGE_KEY);
-
-  if (!row?.value) {
-    return null;
-  }
-
-  return JSON.parse(row.value);
+  return loadState(STORAGE_KEY);
 }
 
 function saveStoredState(state) {
-  getDb().runSync(
-    "INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)",
-    STORAGE_KEY,
-    JSON.stringify(state)
-  );
+  saveState(STORAGE_KEY, state);
 }
 
 function ensureStateShape(value) {
@@ -133,7 +112,7 @@ export default function App() {
       const nextState = ensureStateShape(stored);
       setState(nextState);
       setDataText(JSON.stringify(nextState, null, 2));
-      setStatus(stored ? "Loaded saved iPad/local lens." : "Started a fresh local lens.");
+      setStatus(stored ? "Loaded saved local lens." : "Started a fresh local lens.");
     } catch (error) {
       setStatus(`Local storage error: ${error.message}`);
     } finally {
@@ -148,7 +127,7 @@ export default function App() {
 
     try {
       saveStoredState(state);
-      setStatus("Saved locally on this device.");
+      setStatus(`Saved locally in ${storageLabel}.`);
     } catch (error) {
       setStatus(`Save failed: ${error.message}`);
     }

@@ -1,6 +1,39 @@
 # iPad Usage
 
-There is not an App Store or TestFlight app yet.
+There is not an App Store or TestFlight app yet. For now, the main path is the web app in Safari.
+
+## Main Path: Safari Web App
+
+This avoids iOS signing, AltServer, and IPA installation while still letting you use the current app on iPad.
+
+Current useful loop on iPad:
+
+- start the Expo web dev server on your computer
+- open the web URL in Safari on the iPad
+- paste a URL into Capture
+- apply a fast decision such as spam, ragebait, clickbait, source-backed, or save-for-later
+- inspect the lens result immediately
+- keep the tags locally in the browser
+- use Data to export, import, or reset the local lens JSON
+
+From a normal host terminal:
+
+```bash
+npm install
+npm run mobile:web
+```
+
+With Docker:
+
+```bash
+docker compose up mobile-web
+```
+
+On the iPad, open the host URL exposed by Expo. In a local setup this is usually:
+
+```text
+http://<computer-lan-ip>:8081
+```
 
 The first usable iPad path is a development flow through Expo. The same React Native app in `apps/mobile` targets iOS and iPadOS because `apps/mobile/app.json` has:
 
@@ -12,9 +45,9 @@ The first usable iPad path is a development flow through Expo. The same React Na
 }
 ```
 
-## Option 1: Expo Go
+## Option 2: Expo Go
 
-This is the easiest path for using the app on your iPad right now.
+This is the easiest native-development path for using the app on your iPad.
 
 Current useful loop on iPad:
 
@@ -57,7 +90,7 @@ If using Docker through Codex/WSL relay, the command shape is:
 CUSTOMALGO_WORKSPACE='<windows repository path>' DOCKER_HOST=unix://<relay socket path> docker compose up mobile
 ```
 
-## Option 2: Development Build
+## Option 3: Development Build
 
 Use this when we add native modules that Expo Go does not include, or when we want a standalone SocialLens app icon on the iPad before App Store/TestFlight.
 
@@ -71,7 +104,7 @@ This will likely become necessary after we add:
 - deep links
 - in-app browser native hooks
 
-## Option 3: TestFlight / Internal Distribution
+## Option 4: TestFlight / Internal Distribution
 
 Use this when you want something closer to a real app on the iPad.
 
@@ -89,7 +122,7 @@ Then distribute through:
 
 Devices running iOS 16 or later may need Developer Mode enabled for internal/development builds.
 
-## Option 4: IPA + AltServer
+## Option 5: IPA + AltServer
 
 Another path is to build an `.ipa` and install it through AltServer/AltStore.
 
