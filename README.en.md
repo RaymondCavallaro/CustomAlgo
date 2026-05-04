@@ -109,6 +109,7 @@ docs/
 - [`docs/data-source-protocol.md`](docs/data-source-protocol.md)
 - [`docs/storage-strategy.md`](docs/storage-strategy.md)
 - [`docs/ipad-usage.md`](docs/ipad-usage.md)
+- [`docs/ios-ipa-altserver-plan.md`](docs/ios-ipa-altserver-plan.md)
 - [`docs/social-integrations.md`](docs/social-integrations.md)
 - [`docs/protocol-survey-js-ts.md`](docs/protocol-survey-js-ts.md)
 - [`docs/docker-windows.md`](docs/docker-windows.md)

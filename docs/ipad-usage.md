@@ -80,6 +80,18 @@ Then distribute through:
 
 Devices running iOS 16 or later may need Developer Mode enabled for internal/development builds.
 
+## Option 4: IPA + AltServer
+
+Another path is to build an `.ipa` and install it through AltServer/AltStore.
+
+This should be treated as a separate sideloading phase:
+
+1. Generate an `.ipa` with EAS Build or GitHub Actions.
+2. Install it manually with AltServer first.
+3. After manual install works, experiment with an AltServer-style Docker service.
+
+See `docs/ios-ipa-altserver-plan.md`.
+
 ## How The iPad Experience Should Work
 
 The iPad app should not try to overlay every other app. iPadOS does not allow a universal overlay like a desktop browser extension.
@@ -99,3 +111,4 @@ The iPad experience should be:
 - Expo development builds: https://docs.expo.dev/develop/development-builds/use-development-builds/
 - EAS Build: https://docs.expo.dev/build/introduction/
 - iOS Developer Mode: https://docs.expo.dev/guides/ios-developer-mode/
+- AltServer overview: https://faq.altstore.io/altstore-classic/altserver
