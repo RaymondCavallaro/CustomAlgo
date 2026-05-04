@@ -69,7 +69,7 @@ Data source = where the user's data lives
 2. Go to `chrome://extensions`.
 3. Enable Developer Mode.
 4. Choose Load unpacked.
-5. Select this folder: `C:\dev\git\CustomAlgo`.
+5. Select the local folder for this repository.
 
 ## Project Structure
 

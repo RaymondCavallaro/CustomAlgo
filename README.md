@@ -69,7 +69,7 @@ Data source = onde os dados do usuario vivem
 2. Va para `chrome://extensions`.
 3. Ative Developer Mode.
 4. Escolha Load unpacked.
-5. Selecione esta pasta: `C:\dev\git\CustomAlgo`.
+5. Selecione a pasta local deste repositorio.
 
 ## Estrutura do Projeto
 
