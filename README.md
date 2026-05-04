@@ -105,6 +105,7 @@ docs/
 ## Documentos importantes
 
 - [`docs/product-brief.md`](docs/product-brief.md)
+- [`docs/product-strategy.md`](docs/product-strategy.md)
 - [`docs/platform-architecture.md`](docs/platform-architecture.md)
 - [`docs/data-source-protocol.md`](docs/data-source-protocol.md)
 - [`docs/storage-strategy.md`](docs/storage-strategy.md)

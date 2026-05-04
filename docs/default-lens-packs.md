@@ -2,6 +2,8 @@
 
 The first stage should focus on social networks and ship with minimal default algorithms that users can understand, fork, edit, or reset.
 
+The first user-facing win should be Clean Feed. Other default lenses are important, but they should not distract from proving immediate value.
+
 Defaults are starter semantics, not official truth.
 
 Users can:

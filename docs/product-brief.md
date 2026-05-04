@@ -29,6 +29,14 @@ The earliest useful product is a cross-social tagging layer:
 
 This proves the core behavior: the user can alter their experience of the web without platform permission.
 
+The first product win should be narrower than the full vision:
+
+```txt
+I can clean my feed better than the platform can.
+```
+
+See `docs/product-strategy.md`.
+
 ## Differentiator
 
 Tags are first-class decision signals, not just notes. A tag is a claim about a piece of content, an author, or a domain.
