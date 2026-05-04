@@ -104,10 +104,11 @@ Keep the schema portable across SQLite and Postgres:
 
 ## Current Direction
 
-1. Define durable TypeScript types for `LensState`, `TagEntry`, `Rule`, `Layer`, `Contact`, `Circle`, and `TrustEdge`.
+1. Define durable TypeScript types for `LensState`, `Entity`, `Tag`, `TagApplication`, `Rule`, `Layer`, `Contact`, `Circle`, and `TrustEdge`.
 2. Add a SQLite data source for mobile using Expo SQLite.
 3. Add a Postgres-backed sync service later.
 4. Keep social/API imports writing through the same `LensDataSource` contract.
+5. Store tags and tag applications as first-class records so tags can tag tags and tag applications.
 
 ## Sources
 

@@ -37,6 +37,8 @@ The future interface should support:
 
 - reading and writing the user's lens state
 - querying tags by content, author, domain, source user, and time
+- querying tag applications by target, tag, creator, layer, and permission
+- tagging tags and tag applications as first-class targets
 - importing and exporting lens packs
 - syncing changes incrementally
 - preserving provenance for imported tags and rules

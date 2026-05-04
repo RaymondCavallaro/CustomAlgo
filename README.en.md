@@ -108,6 +108,8 @@ docs/
 - [`docs/platform-architecture.md`](docs/platform-architecture.md)
 - [`docs/data-source-protocol.md`](docs/data-source-protocol.md)
 - [`docs/storage-strategy.md`](docs/storage-strategy.md)
+- [`docs/tag-native-semantics.md`](docs/tag-native-semantics.md)
+- [`docs/default-lens-packs.md`](docs/default-lens-packs.md)
 - [`docs/ipad-usage.md`](docs/ipad-usage.md)
 - [`docs/ios-ipa-altserver-plan.md`](docs/ios-ipa-altserver-plan.md)
 - [`docs/social-integrations.md`](docs/social-integrations.md)

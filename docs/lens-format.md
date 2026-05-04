@@ -2,6 +2,8 @@
 
 This document describes the current JSON shape exported by SocialLens. The format is intended to be shared by every client: browser extension, web/PWA, Android, iOS, and iPadOS.
 
+The format should evolve toward the tag-native semantic graph described in `docs/tag-native-semantics.md`, where tags and tag applications are first-class records.
+
 ## Root
 
 ```json

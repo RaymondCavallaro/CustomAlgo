@@ -45,6 +45,8 @@ docs/
   platform-architecture.md
   data-source-protocol.md
   storage-strategy.md
+  tag-native-semantics.md
+  default-lens-packs.md
   ipad-usage.md
   social-integrations.md
   product-brief.md
